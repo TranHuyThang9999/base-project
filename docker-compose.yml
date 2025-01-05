@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:15 
+    container_name: postgres_container
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin     # Tên user
+      POSTGRES_PASSWORD: 1234 # Mật khẩu
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Volume để lưu trữ dữ liệu
+
+volumes:
+  postgres_data:
+    driver: local
