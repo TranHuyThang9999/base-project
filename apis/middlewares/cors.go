@@ -1,6 +1,9 @@
 package middlewares
 
 import (
+	"context"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	cors "github.com/rs/cors/wrapper/gin"
 )
@@ -14,11 +17,28 @@ func NewMiddlewareCors() *MiddlewareCors {
 }
 
 func (u *MiddlewareCors) Cors() gin.HandlerFunc {
-	return cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
-		AllowedHeaders:   []string{"Origin", "Content-Type", "Accept"},
-		ExposedHeaders:   []string{"Content-Length"},
-		AllowCredentials: true,
-	})
+	return func(ctx *gin.Context) {
+		timeoutCtx, cancel := context.WithTimeout(ctx.Request.Context(), 10*time.Second)
+		defer cancel()
+
+		ctx.Request = ctx.Request.WithContext(timeoutCtx)
+
+		cors.New(cors.Options{
+			AllowedOrigins:   []string{"*"},
+			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+			AllowedHeaders:   []string{"Origin", "Content-Type", "Accept"},
+			ExposedHeaders:   []string{"Content-Length"},
+			AllowCredentials: true,
+		})(ctx)
+
+		select {
+		case <-timeoutCtx.Done():
+			if timeoutCtx.Err() == context.DeadlineExceeded {
+				ctx.JSON(408, gin.H{"error": "Request Timeout"})
+				ctx.Abort()
+			}
+		default:
+			ctx.Next()
+		}
+	}
 }
