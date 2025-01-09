@@ -34,3 +34,17 @@ func (bc *baseController) Bind(ctx *gin.Context, req interface{}) bool {
 	}
 	return true
 }
+
+func (bc *baseController) GetUserID(ctx *gin.Context) (int64, bool) {
+	value, ok := ctx.Get("userId")
+	if !ok {
+		return 0, false
+	}
+
+	userID, ok := value.(int64)
+	if !ok {
+		return 0, false
+	}
+
+	return userID, true
+}

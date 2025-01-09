@@ -47,7 +47,7 @@ var (
 
 	ErrNotFound = NewError(
 		apperror.ErrorNotFound,
-		http.StatusNotFound,
+		http.StatusConflict,
 		apperror.ErrorNotFoundCode,
 		apperror.ErrorNotFound.Error(),
 	)
@@ -64,5 +64,19 @@ var (
 		http.StatusInternalServerError,
 		apperror.ErrorHashPasswordCode,
 		apperror.ErrorHashPassword.Error(),
+	)
+
+	ErrGenToken = NewError(
+		apperror.ErrorGenToken,
+		http.StatusInternalServerError,
+		apperror.ErrorGenTokenCode,
+		apperror.ErrorGenToken.Error(),
+	)
+
+	ErrVerifyToken = NewError(
+		apperror.VerifyToken,
+		http.StatusUnauthorized,
+		apperror.ErrorAuthCode,
+		apperror.ErrorAuthentication.Error(),
 	)
 )

@@ -41,6 +41,7 @@ func (u *Resource) ListAndCount(ctx *gin.Context, data interface{}, count int) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":  http.StatusOK,
 		"count": count,
+		"data":  data,
 	})
 }
 
@@ -48,5 +49,12 @@ func (u *Resource) Error(ctx *gin.Context, err *customerrors.CustomError) {
 	ctx.JSON(err.Status, gin.H{
 		"code":    err.Code,
 		"message": err.Message,
+	})
+}
+
+func (u *Resource) Response(ctx *gin.Context, data interface{}) {
+	ctx.JSON(http.StatusOK, gin.H{
+		"code": http.StatusOK,
+		"data": data,
 	})
 }

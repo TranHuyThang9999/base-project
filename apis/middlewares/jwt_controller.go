@@ -10,11 +10,13 @@ import (
 
 type MiddlewareJwt struct {
 	jwtService *services.JwtService
+	user       *services.UserService
 }
 
-func NewMiddlewareJwt(jwtService *services.JwtService) *MiddlewareJwt {
+func NewMiddlewareJwt(jwtService *services.JwtService, user *services.UserService) *MiddlewareJwt {
 	return &MiddlewareJwt{
 		jwtService: jwtService,
+		user:       user,
 	}
 }
 
@@ -45,7 +47,17 @@ func (m *MiddlewareJwt) Authorization() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-
+		user, err := m.user.Profile(c, claims.Id)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.Abort()
+			return
+		}
+		if user.UpdatedAt != claims.UpdatedAccountUser {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "User information has been updated. Please log in again."})
+			c.Abort()
+			return
+		}
 		// Store user information in the context for later use
 		c.Set("userId", claims.Id)
 		c.Set("userName", claims.UserName)

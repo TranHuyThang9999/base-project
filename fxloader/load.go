@@ -48,6 +48,7 @@ func loadEngine() []fx.Option {
 		fx.Provide(controllers.NewUserController),
 		fx.Provide(controllers.NewBaseController),
 		fx.Provide(resources.NewResource),
+		fx.Provide(middlewares.NewMiddlewareJwt),
 	}
 }
 

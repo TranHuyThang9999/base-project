@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"rices/apis/entities"
 	"rices/common/configs"
+	customerrors "rices/core/custom_errors"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -51,7 +52,7 @@ func (u *JwtService) GenToken(ctx context.Context, userName string, userId int64
 	}, nil
 }
 
-func (u *JwtService) VerifyToken(ctx context.Context, tokenString string) (*entities.User, error) {
+func (u *JwtService) VerifyToken(ctx context.Context, tokenString string) (*entities.User, *customerrors.CustomError) {
 	token, err := jwt.ParseWithClaims(tokenString, &entities.User{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -60,12 +61,12 @@ func (u *JwtService) VerifyToken(ctx context.Context, tokenString string) (*enti
 	})
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse token: %v", err)
+		return nil, customerrors.ErrVerifyToken
 	}
 
 	if claims, ok := token.Claims.(*entities.User); ok && token.Valid {
 		return claims, nil
 	}
 
-	return nil, fmt.Errorf("invalid token")
+	return nil, customerrors.ErrVerifyToken
 }

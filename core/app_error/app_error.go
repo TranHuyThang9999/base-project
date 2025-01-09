@@ -10,6 +10,8 @@ const (
 	ErrorNotFoundCode
 	ErrorUserExistsCode
 	ErrorHashPasswordCode
+	ErrorGenTokenCode
+	VerifyTokenCode
 )
 
 var (
@@ -18,4 +20,6 @@ var (
 	ErrorNotFound       = errors.New("not found error")
 	ErrorUserExists     = errors.New("user already exists")
 	ErrorHashPassword   = errors.New("error hash password")
+	ErrorGenToken       = errors.New("error generating token")
+	VerifyToken         = errors.New("error verify token")
 )
