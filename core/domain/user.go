@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"context"
 	"time"
 
 	"gorm.io/gorm"
@@ -13,8 +14,16 @@ type Users struct {
 	Email       string         `json:"email,omitempty"`
 	PhoneNumber string         `json:"phone_number,omitempty"`
 	CreatedAt   time.Time      `json:"created_at,omitempty"`
+	UpdatedAt   time.Time      `json:"updated_at,omitempty"`
 	DeletedAt   gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 }
 
 type RepositoryUser interface {
+	Create(ctx context.Context, user *Users) error
+	Update(ctx context.Context, user *Users) error
+	Delete(ctx context.Context, id int64) error
+	FindByID(ctx context.Context, id int64) (*Users, error)
+	FindByUsername(ctx context.Context, username string) (*Users, error)
+	FindByEmail(ctx context.Context, email string) (*Users, error)
+	UpdatePassword(ctx context.Context, id int64, newPassword string) error
 }

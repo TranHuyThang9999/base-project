@@ -26,20 +26,17 @@ func main() {
 		fx.Provide(configs.Get),
 		fx.Options(fxloader.Load()...),
 		fx.Invoke(serverLifecycle),
-		fx.Options(), // No need for conditional logic with nopLogger
+		fx.Options(),
 	)
 
-	// Run the application
 	if err := app.Start(context.Background()); err != nil {
 		log.Fatal(err, "Error starting application")
 	}
 
-	// Wait for an interrupt signal to gracefully shut down the application
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt)
 	<-stop
 
-	// Shut down the application gracefully
 	if err := app.Stop(context.Background()); err != nil {
 		log.Fatal(err, "Error stopping application")
 	}
@@ -62,8 +59,7 @@ func serverLifecycle(lc fx.Lifecycle, apiRouter *routers.ApiRouter, cf *configs.
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
-			//todo user log custom
-			//	log.Infof("Stopping backend server.", cf.Port)
+			log.Println("Stopping backend server.", cf.Port)
 			return server.Shutdown(ctx)
 		},
 	})
