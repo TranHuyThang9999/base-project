@@ -7,16 +7,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type baseController struct {
-	*gin.Context
-}
+type baseController struct{}
 
 func NewBaseController() *baseController {
 	return &baseController{}
 }
 
-func (bc *baseController) GetParamTypeNumber(param string) (int64, bool) {
-	paramValue := bc.Param(param)
+func (bc *baseController) GetParamTypeNumber(ctx *gin.Context, param string) (int64, bool) {
+	paramValue := ctx.Param(param)
 	if paramValue == "" {
 		return 0, false
 	}
@@ -29,11 +27,10 @@ func (bc *baseController) GetParamTypeNumber(param string) (int64, bool) {
 	return num, true
 }
 
-func (u *baseController) Bind(req interface{}) bool {
-	if err := u.ShouldBindBodyWithJSON(req); err != nil {
-		u.JSON(http.StatusBadRequest, err)
+func (bc *baseController) Bind(ctx *gin.Context, req interface{}) bool {
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, err)
 		return false
 	}
-
 	return true
 }

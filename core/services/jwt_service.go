@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
+	"rices/apis/entities"
 	"rices/common/configs"
 	"time"
 
@@ -19,27 +20,13 @@ func NewJwtService(config *configs.Configs) *JwtService {
 	}
 }
 
-type User struct {
-	jwt.RegisteredClaims
-	Id                 int64     `json:"id,omitempty"`
-	UserName           string    `json:"user_name,omitempty"`
-	UpdatedAccountUser time.Time `json:"updated_at,omitempty"`
-}
-
-type JwtResponse struct {
-	Token              string    `json:"token"`
-	UserName           string    `json:"user_name"`
-	UserId             int64     `json:"user_id"`
-	UpdatedAccountUser time.Time `json:"updated_at,omitempty"`
-}
-
-func (u *JwtService) GenToken(ctx context.Context, userName string, userId int64, updatedAt time.Time) (*JwtResponse, error) {
+func (u *JwtService) GenToken(ctx context.Context, userName string, userId int64, updatedAt time.Time) (*entities.JwtResponse, error) {
 	expirationDuration, err := time.ParseDuration(u.config.ExpireAccess)
 	if err != nil {
 		return nil, fmt.Errorf("invalid expiration duration: %v", err)
 	}
 
-	claims := User{
+	claims := entities.User{
 		UserName:           userName,
 		Id:                 userId,
 		UpdatedAccountUser: updatedAt,
@@ -56,7 +43,7 @@ func (u *JwtService) GenToken(ctx context.Context, userName string, userId int64
 		return nil, fmt.Errorf("failed to sign token: %v", err)
 	}
 
-	return &JwtResponse{
+	return &entities.JwtResponse{
 		Token:              tokenString,
 		UserName:           userName,
 		UserId:             userId,
@@ -64,8 +51,8 @@ func (u *JwtService) GenToken(ctx context.Context, userName string, userId int64
 	}, nil
 }
 
-func (u *JwtService) VerifyToken(ctx context.Context, tokenString string) (*User, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &User{}, func(token *jwt.Token) (interface{}, error) {
+func (u *JwtService) VerifyToken(ctx context.Context, tokenString string) (*entities.User, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &entities.User{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
@@ -76,7 +63,7 @@ func (u *JwtService) VerifyToken(ctx context.Context, tokenString string) (*User
 		return nil, fmt.Errorf("failed to parse token: %v", err)
 	}
 
-	if claims, ok := token.Claims.(*User); ok && token.Valid {
+	if claims, ok := token.Claims.(*entities.User); ok && token.Valid {
 		return claims, nil
 	}
 

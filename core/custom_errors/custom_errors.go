@@ -1,6 +1,10 @@
 package customerrors
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+	apperror "rices/core/app_error"
+)
 
 type CustomError struct {
 	error
@@ -25,3 +29,40 @@ func (u *CustomError) Error() string {
 func (u *CustomError) String() string {
 	return u.Error()
 }
+
+var (
+	ErrDB = NewError(
+		apperror.ErrorDataBase,
+		http.StatusInternalServerError,
+		apperror.ErrorDataBaseCode,
+		apperror.ErrorDataBase.Error(),
+	)
+
+	ErrAuth = NewError(
+		apperror.ErrorAuthentication,
+		http.StatusUnauthorized,
+		apperror.ErrorAuthCode,
+		apperror.ErrorAuthentication.Error(),
+	)
+
+	ErrNotFound = NewError(
+		apperror.ErrorNotFound,
+		http.StatusNotFound,
+		apperror.ErrorNotFoundCode,
+		apperror.ErrorNotFound.Error(),
+	)
+
+	ErrUserExists = NewError(
+		apperror.ErrorUserExists,
+		http.StatusConflict,
+		apperror.ErrorUserExistsCode,
+		apperror.ErrorUserExists.Error(),
+	)
+
+	ErrHashPassword = NewError(
+		apperror.ErrorHashPassword,
+		http.StatusInternalServerError,
+		apperror.ErrorHashPasswordCode,
+		apperror.ErrorHashPassword.Error(),
+	)
+)

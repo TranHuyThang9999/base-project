@@ -1,11 +1,14 @@
 package fxloader
 
 import (
+	"rices/apis/controllers"
 	"rices/apis/middlewares"
+	"rices/apis/resources"
 	"rices/apis/routers"
 	"rices/common/logger"
 	"rices/core/adapters"
 	"rices/core/adapters/repository"
+	"rices/core/services"
 
 	"go.uber.org/fx"
 )
@@ -32,13 +35,19 @@ func loadAdapter() []fx.Option {
 }
 
 func loadUseCase() []fx.Option {
-	return []fx.Option{}
+	return []fx.Option{
+		fx.Provide(services.NewJwtService),
+		fx.Provide(services.NewUserService),
+	}
 }
 
 func loadEngine() []fx.Option {
 	return []fx.Option{
 		fx.Provide(routers.NewApiRouter),
 		fx.Provide(middlewares.NewMiddlewareCors),
+		fx.Provide(controllers.NewUserController),
+		fx.Provide(controllers.NewBaseController),
+		fx.Provide(resources.NewResource),
 	}
 }
 

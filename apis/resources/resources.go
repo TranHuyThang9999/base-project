@@ -19,21 +19,21 @@ func NewResource() *Resource {
 func (u *Resource) CreatedSuccess(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{
 		"code":    http.StatusCreated,
-		"message": "Resource created successfully",
+		"message": "created successfully",
 	})
 }
 
 func (u *Resource) DeletedSuccess(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": "Resource deleted successfully",
+		"message": "deleted successfully",
 	})
 }
 
 func (u *Resource) UpdatedSuccess(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": "Resource updated successfully",
+		"message": "updated successfully",
 	})
 }
 

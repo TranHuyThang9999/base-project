@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"rices/apis/controllers"
 	"rices/apis/middlewares"
 	"rices/common/configs"
 
@@ -14,17 +15,25 @@ type ApiRouter struct {
 func NewApiRouter(
 	cf *configs.Configs,
 	cors *middlewares.MiddlewareCors,
+	user *controllers.UserController,
+
 ) *ApiRouter {
 	engine := gin.New()
+
 	gin.DisableConsoleColor()
 	engine.Use(gin.Logger())
 	engine.Use(gin.Recovery())
 	engine.Use(cors.Cors())
+
 	r := engine.RouterGroup.Group("/manager")
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
 	})
 
+	userGroup := r.Group("/user")
+	{
+		userGroup.POST("/register", user.Register)
+	}
 	return &ApiRouter{
 		Engine: engine,
 	}

@@ -23,7 +23,7 @@ func (u *UUID) GenUUID() int64 {
 	return (timestamp << 20) | (count & 0xFFFFF)
 }
 
-func (u *UUID) GenTime() *time.Time {
-	now := time.Now()
-	return &now
+func (u *UUID) GenTime() time.Time {
+	now := time.Now().UTC()
+	return now
 }

@@ -25,3 +25,6 @@ func (l *Logger) Error(msg string, err error) {
 func (l *Logger) Infof(msg string, args ...interface{}) {
 	l.log.Infof(msg, args...)
 }
+func (l *Logger) Warn(args ...interface{}) {
+	l.log.Warnln(args...)
+}
