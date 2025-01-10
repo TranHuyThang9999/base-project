@@ -15,6 +15,8 @@ type Configs struct {
 	PasswordRedis      string `json:"password_redis"`
 	DatabaseRedisIndex int    `json:"database_redis_index"`
 	KeyAes             string `json:"key_aes"`
+	Email              string `json:"email"`
+	KeyEmail           string `json:"key_email"`
 }
 
 var config *Configs
