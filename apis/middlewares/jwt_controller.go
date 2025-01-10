@@ -43,16 +43,18 @@ func (m *MiddlewareJwt) Authorization() gin.HandlerFunc {
 		// Verify the token
 		claims, err := m.jwtService.VerifyToken(c, tokenString)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+			c.JSON(http.StatusUnauthorized, err.Error())
 			c.Abort()
 			return
 		}
+
 		user, err := m.user.Profile(c, claims.Id)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, err.Error())
 			c.Abort()
 			return
 		}
+		//check user name changle password
 		if user.UpdatedAt != claims.UpdatedAccountUser {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "User information has been updated. Please log in again."})
 			c.Abort()

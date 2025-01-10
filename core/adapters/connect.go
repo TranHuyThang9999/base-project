@@ -33,6 +33,7 @@ func (p *Pgsql) Connect() error {
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetMaxOpenConns(100)
 	db.AutoMigrate(&domain.Users{})
+	db.AutoMigrate(&domain.FileDescriptors{})
 	p.db = db
 	return nil
 }

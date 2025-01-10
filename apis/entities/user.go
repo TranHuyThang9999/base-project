@@ -9,6 +9,7 @@ type CreateUserRequest struct {
 	Password    string `json:"password,omitempty" binding:"required"`
 	Email       string `json:"email,omitempty"`
 	PhoneNumber string `json:"phone_number,omitempty"`
+	Avatar      string `json:"avatar,omitempty"`
 }
 
 type GetProfile struct {

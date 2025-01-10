@@ -24,7 +24,7 @@ func NewApiRouter(
 	gin.DisableConsoleColor()
 	engine.Use(gin.Logger())
 	engine.Use(gin.Recovery())
-	engine.Use(cors.Cors())
+	engine.Use(cors.CorsAPI())
 
 	r := engine.RouterGroup.Group("/manager")
 	r.GET("/ping", func(c *gin.Context) {
