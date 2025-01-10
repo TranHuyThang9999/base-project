@@ -19,7 +19,7 @@ type Users struct {
 }
 
 type RepositoryUser interface {
-	Create(ctx context.Context, user *Users) error
+	Create(ctx context.Context, db *gorm.DB, user *Users) error
 	Update(ctx context.Context, user *Users) error
 	Delete(ctx context.Context, id int64) error
 	FindByID(ctx context.Context, id int64) (*Users, error)

@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"rices/core/adapters"
 	"rices/core/adapters/cache"
 	"time"
@@ -106,12 +108,16 @@ func (c *cacheRepository) HSet(ctx context.Context, key string, values ...interf
 	return nil
 }
 
-// Set implements cache.CacheOperations.
 func (c *cacheRepository) Set(ctx context.Context, key string, value interface{}, expiration time.Duration) error {
-	// Use Redis SET command to set the key-value pair with expiration time.
-	err := c.db.Client().Set(ctx, key, value, expiration).Err()
+	jsonBytes, err := json.Marshal(value)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to marshal value to JSON: %w", err)
 	}
+
+	err = c.db.Client().Set(ctx, key, jsonBytes, expiration).Err()
+	if err != nil {
+		return fmt.Errorf("failed to set value in Redis: %w", err)
+	}
+
 	return nil
 }

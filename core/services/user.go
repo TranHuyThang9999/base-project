@@ -2,32 +2,45 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"rices/apis/entities"
 	"rices/common/logger"
 	"rices/common/utils"
+	"rices/core/adapters/cache"
 	customerrors "rices/core/custom_errors"
 	"rices/core/domain"
 	"strings"
 
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 type UserService struct {
-	user domain.RepositoryUser
-	log  *logger.Logger
-	jwt  *JwtService
+	user  domain.RepositoryUser
+	log   *logger.Logger
+	jwt   *JwtService
+	cache cache.CacheOperations
+	trans domain.RepositoryTransactionHelper
 }
 
-func NewUserService(user domain.RepositoryUser, log *logger.Logger, jwt *JwtService) *UserService {
+func NewUserService(user domain.RepositoryUser,
+	log *logger.Logger,
+	jwt *JwtService,
+	cache cache.CacheOperations,
+	trans domain.RepositoryTransactionHelper,
+) *UserService {
 	return &UserService{
-		user: user,
-		log:  log,
-		jwt:  jwt,
+		user:  user,
+		log:   log,
+		jwt:   jwt,
+		cache: cache,
+		trans: trans,
 	}
 }
 
 func (u *UserService) Register(ctx context.Context, req *entities.CreateUserRequest) *customerrors.CustomError {
 	userNameTrSp := strings.TrimSpace(req.UserName)
+	userID := utils.NewUUID().GenUUID()
 	user, err := u.user.FindByUsername(ctx, userNameTrSp)
 	if err != nil {
 		u.log.Error("database error during user lookup", err)
@@ -45,7 +58,7 @@ func (u *UserService) Register(ctx context.Context, req *entities.CreateUserRequ
 	}
 
 	model := &domain.Users{
-		Id:          utils.NewUUID().GenUUID(),
+		Id:          userID,
 		UserName:    userNameTrSp,
 		Password:    string(passwordHash),
 		Email:       req.Email,
@@ -54,9 +67,22 @@ func (u *UserService) Register(ctx context.Context, req *entities.CreateUserRequ
 		UpdatedAt:   utils.NewUUID().GenTime(),
 	}
 
-	err = u.user.Create(ctx, model)
-	if err != nil {
-		u.log.Error("Failed to create user", err)
+	if err := u.trans.Transaction(ctx, func(ctx context.Context, db *gorm.DB) error {
+		err = u.user.Create(ctx, db, model)
+		if err != nil {
+			u.log.Error("Failed to create user", err)
+			return customerrors.ErrDB
+		}
+
+		key := fmt.Sprintf("user:%v", userID)
+		err = u.cache.Set(ctx, key, model, 0)
+		if err != nil {
+			u.log.Error("Failed add info after to create user", err)
+			return customerrors.ErrDB
+		}
+
+		return nil
+	}); err != nil {
 		return customerrors.ErrDB
 	}
 

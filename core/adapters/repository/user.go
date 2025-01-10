@@ -18,8 +18,8 @@ func NewRepositoryUser(db *adapters.Pgsql) domain.RepositoryUser {
 	}
 }
 
-func (r *userRepository) Create(ctx context.Context, user *domain.Users) error {
-	return r.db.DB().WithContext(ctx).Create(user).Error
+func (r *userRepository) Create(ctx context.Context, db *gorm.DB, user *domain.Users) error {
+	return db.WithContext(ctx).Create(user).Error
 }
 
 func (r *userRepository) Update(ctx context.Context, user *domain.Users) error {

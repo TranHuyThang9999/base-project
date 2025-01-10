@@ -37,6 +37,8 @@ func loadAdapter() []fx.Option {
 			return db.Connect()
 		}),
 		fx.Provide(repository.NewRepositoryUser),
+		fx.Provide(repository.NewRepositoryCache),
+		fx.Provide(repository.NewRepositoryTransaction),
 	}
 }
 
