@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"rices/core/services"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -55,8 +56,10 @@ func (m *MiddlewareJwt) Authorization() gin.HandlerFunc {
 			return
 		}
 		//check user name changle password
-		if user.UpdatedAt != claims.UpdatedAccountUser {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "User information has been updated. Please log in again."})
+
+		if user.UpdatedAt.UTC().Format(time.RFC3339) != claims.UpdatedAccountUser.UTC().Format(time.RFC3339) {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "User information has been updated. Please log in again."})
 			c.Abort()
 			return
 		}

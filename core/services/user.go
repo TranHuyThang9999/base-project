@@ -63,6 +63,7 @@ func (u *UserService) Register(ctx context.Context, req *entities.CreateUserRequ
 		Password:    string(passwordHash),
 		Email:       req.Email,
 		PhoneNumber: req.PhoneNumber,
+		Avatar:      req.Avatar,
 		CreatedAt:   utils.NewUUID().GenTime(),
 		UpdatedAt:   utils.NewUUID().GenTime(),
 	}
@@ -113,11 +114,14 @@ func (u *UserService) Login(ctx context.Context, user_name, password string) (*e
 }
 
 func (u *UserService) Profile(ctx context.Context, userID int64) (*entities.GetProfile, *customerrors.CustomError) {
-	user, err := u.user.FindByID(ctx, userID)
+	key := fmt.Sprintf("user:%v", userID)
+	var user domain.Users
+	err := u.cache.Get(ctx, key, &user)
 	if err != nil {
+		u.log.Error("error get data from cache", err)
 		return nil, customerrors.ErrDB
 	}
-	if user == nil {
+	if user.UserName == "" {
 		return nil, customerrors.ErrNotFound
 	}
 
