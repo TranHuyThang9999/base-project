@@ -9,6 +9,7 @@ import (
 
 type FileDescriptors struct {
 	Id        int64          `json:"id,omitempty" gorm:"column:id;type:bigint;primaryKey"`
+	CreatorID int64          `json:"creator_id,omitempty"`
 	ObjectID  int64          `json:"object_id,omitempty"`
 	Url       string         `json:"url,omitempty"`
 	CreatedAt time.Time      `json:"created_at,omitempty"`
@@ -22,8 +23,8 @@ func (FileDescriptors) TableName() string {
 type RepositoryFileDescriptors interface {
 	Add(ctx context.Context, file *FileDescriptors) error
 	ListByObjectID(ctx context.Context, objectID int64) ([]*FileDescriptors, error)
-	DeleteFileByID(ctx context.Context, fileID int64) error
-	DeleteFileByObjectID(ctx context.Context, objectID int64) error
+	DeleteFileByID(ctx context.Context, fileID, userID int64) error
+	DeleteFileByObjectID(ctx context.Context, objectID, userID int64) error
 	AddWithTransaction(ctx context.Context, db *gorm.DB, file *FileDescriptors) error
 	AddListFileWithTransaction(ctx context.Context, db *gorm.DB, files []*FileDescriptors) error
 }

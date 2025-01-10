@@ -6,8 +6,8 @@ import (
 )
 
 func main() {
-	email := "tranhuythang9999@gmail.com"
-	pass := "jkqr axuk tjie ziyl"
+	email := "my email@gmail.com"
+	pass := "pass key"
 	to := "tranhuythang9999@gmail.com"
 	subject := "Test Email"
 	content := "This is a test email sent from Go."

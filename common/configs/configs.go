@@ -9,11 +9,12 @@ type Configs struct {
 	FileLc             string `json:"file_lc"`
 	DataSource         string `json:"data_source"`
 	Port               string `json:"port"`
-	AccessSecret       string `json:"access_secret,omitempty"`
-	ExpireAccess       string `json:"expire_access,omitempty"`
-	AddressRedis       string `json:"addressRedis"`       // Địa chỉ và cổng Redis
-	PasswordRedis      string `json:"passwordRedis"`      // Mật khẩu Redis (nếu có)
-	DatabaseredisIndex string `json:"databaseredisIndex"` // Số DB trong Redis
+	AccessSecret       string `json:"access_secret"`
+	ExpireAccess       string `json:"expire_access"`
+	AddressRedis       string `json:"address_redis"`
+	PasswordRedis      string `json:"password_redis"`
+	DatabaseRedisIndex int    `json:"database_redis_index"`
+	KeyAes             string `json:"key_aes"`
 }
 
 var config *Configs

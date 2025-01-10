@@ -44,7 +44,7 @@ func (u *UserService) Register(ctx context.Context, req *entities.CreateUserRequ
 		return customerrors.ErrHashPassword
 	}
 
-	err = u.user.Create(ctx, &domain.Users{
+	model := &domain.Users{
 		Id:          utils.NewUUID().GenUUID(),
 		UserName:    userNameTrSp,
 		Password:    string(passwordHash),
@@ -52,7 +52,9 @@ func (u *UserService) Register(ctx context.Context, req *entities.CreateUserRequ
 		PhoneNumber: req.PhoneNumber,
 		CreatedAt:   utils.NewUUID().GenTime(),
 		UpdatedAt:   utils.NewUUID().GenTime(),
-	})
+	}
+
+	err = u.user.Create(ctx, model)
 	if err != nil {
 		u.log.Error("Failed to create user", err)
 		return customerrors.ErrDB

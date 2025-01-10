@@ -4,5 +4,9 @@
     "access_secret": "secretAAAAAAaal;kjmnopiaassssdsv",
     "expire_access": "24h",
     "email":"tranhuythang9999@gmail.com",
-    "key_email":"jkqr axuk tjie ziyl"
+    "key_email":"jkqr axuk tjie ziyl",
+    "address_redis":"127.0.0.1:6379",
+    "password_redis":"",
+    "database_redis_index":0,
+    "key_aes":"12134342,"
 }

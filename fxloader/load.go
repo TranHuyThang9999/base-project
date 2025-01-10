@@ -27,7 +27,13 @@ func loadAdapter() []fx.Option {
 		fx.Provide(
 			adapters.NewPgsql,
 		),
+		fx.Provide(
+			adapters.NewRedis,
+		),
 		fx.Invoke(func(db *adapters.Pgsql) error {
+			return db.Connect()
+		}),
+		fx.Invoke(func(db *adapters.Redis) error {
 			return db.Connect()
 		}),
 		fx.Provide(repository.NewRepositoryUser),

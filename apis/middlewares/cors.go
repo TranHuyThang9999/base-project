@@ -43,4 +43,8 @@ func (u *MiddlewareCors) CorsAPI() gin.HandlerFunc {
 	}
 }
 
-func (u *MiddlewareCors) CorsWss()
+func (u *MiddlewareCors) CorsWss() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+	}
+}
