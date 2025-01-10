@@ -8,7 +8,7 @@ import (
 )
 
 type Users struct {
-	Id           int64          `json:"id,omitempty" gorm:"column:id;type:bigint;primaryKey"`
+	Id           int64          `json:"id,omitempty" gorm:"column:id;type:bigint;primaryKey;index"`
 	UserName     string         `json:"user_name,omitempty" gorm:"column:user_name;unique"`
 	Password     string         `json:"password,omitempty"`
 	PhoneNumber  string         `json:"phone_number,omitempty"`
