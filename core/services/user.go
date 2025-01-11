@@ -97,13 +97,10 @@ func (u *UserService) Login(ctx context.Context, user_name, password string) (*e
 		return nil, customerrors.ErrDB
 	}
 	if user == nil {
-		u.log.Warn("user not found")
 		return nil, customerrors.ErrNotFound
 	}
-	u.log.Infof("password : ", user.Password)
-	err = bcrypt.CompareHashAndPassword([]byte("$2a$10$zX8rRA34cpjqCzn1f36kg.Cb9r0mov2u2PNT3kna961Xq/C1c8fLK"), []byte("93023126"))
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
-		u.log.Warn("error passwrd")
 		return nil, customerrors.ErrNotFound
 	}
 	genToken, err := u.jwt.GenToken(ctx, user.UserName, user.Id, user.UpdatedAt)
@@ -149,9 +146,8 @@ func (u *UserService) LoginWithGG(ctx context.Context, tokenFromGG string) (*ent
 		return nil, customerrors.ErrVerifyTokenEmail
 	}
 
-	genPassWord := utils.GenPassWord()
-	u.log.Infof("password: ", genPassWord)
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(fmt.Sprintln(genPassWord)), bcrypt.DefaultCost)
+	genPassWord := utils.GenPasswordString(8)
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(genPassWord), bcrypt.DefaultCost)
 	if err != nil {
 		u.log.Error("error hash password", err)
 		return nil, customerrors.ErrHashPassword
