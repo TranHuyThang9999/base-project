@@ -62,7 +62,6 @@ func GetGooglePublicKeys() (map[string]*rsa.PublicKey, error) {
 	return keys, nil
 }
 
-// VerifyGoogleToken xác minh và giải mã token của Google
 func VerifyGoogleToken(idToken string) (*entities.GoogleClaims, error) {
 	publicKeys, err := GetGooglePublicKeys()
 	if err != nil {

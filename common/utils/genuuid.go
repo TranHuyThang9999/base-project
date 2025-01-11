@@ -2,7 +2,9 @@ package utils
 
 import (
 	"crypto/rand"
+	"fmt"
 	"math/big"
+	"os"
 	"time"
 )
 
@@ -88,4 +90,39 @@ func ValidatePassword(password string) bool {
 	}
 
 	return hasUpper && hasLower && hasNumber && hasSymbol
+}
+
+func GenerateConfigFile() {
+	content := `
+	{
+    "data_source": "host=localhost user=postgres password=1234 dbname=rices port=5432 sslmode=disable TimeZone=Asia/Shanghai",
+    "port": "8080",
+    "access_secret": "secretAAAAAAaal;kjmnopiaassssdsv",
+    "expire_access": "24h",
+    "address_redis":"127.0.0.1:6379",
+    "password_redis":"",
+    "database_redis_index":0,
+    "key_aes":"y-in-y-srkss-u-dgr-y1ie32ncelv-ohee-aare-tv",
+    "email":"tranhuythang9999@gmail.com",
+    "app_key":"jkqr axuk tjie ziyl",
+    "smtp_host":"smtp.gmail.com",
+    "smtp_port":"587"
+	}
+	`
+	if err := os.MkdirAll("configs", os.ModePerm); err != nil {
+		fmt.Println("Error creating directory:", err)
+		return
+	}
+
+	file, err := os.Create("configs/configs.json")
+	if err != nil {
+		fmt.Println("Error creating file:", err)
+		return
+	}
+	defer file.Close()
+
+	_, err = file.WriteString(content)
+	if err != nil {
+		fmt.Println("Error writing to file:", err)
+	}
 }

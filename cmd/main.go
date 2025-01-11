@@ -9,12 +9,14 @@ import (
 	"os/signal"
 	"rices/apis/routers"
 	"rices/common/configs"
+	"rices/common/utils"
 	"rices/fxloader"
 
 	"go.uber.org/fx"
 )
 
 func init() {
+	utils.GenerateConfigFile() //use dev
 	var pathConfig string
 	flag.StringVar(&pathConfig, "configs", "configs/configs.json", "path config")
 	flag.Parse()
