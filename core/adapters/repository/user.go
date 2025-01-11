@@ -79,3 +79,15 @@ func (r *userRepository) FindByEmail(ctx context.Context, email string) (*domain
 func (r *userRepository) UpdatePassword(ctx context.Context, id int64, newPassword string) error {
 	return r.db.DB().WithContext(ctx).Model(&domain.Users{}).Where("id = ?", id).Update("password", newPassword).Error
 }
+
+func (r *userRepository) GetUserByGoogleUserID(ctx context.Context, ggID string) (*domain.Users, error) {
+	var user domain.Users
+	err := r.db.DB().WithContext(ctx).Where("google_user_id = ?", ggID).First(&user).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &user, nil
+}

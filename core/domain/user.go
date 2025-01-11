@@ -29,4 +29,5 @@ type RepositoryUser interface {
 	FindByUsername(ctx context.Context, username string) (*Users, error)
 	FindByEmail(ctx context.Context, email string) (*Users, error)
 	UpdatePassword(ctx context.Context, id int64, newPassword string) error
+	GetUserByGoogleUserID(ctx context.Context, ggID string) (*Users, error)
 }

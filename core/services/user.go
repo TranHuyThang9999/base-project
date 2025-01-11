@@ -136,7 +136,7 @@ func (u *UserService) Profile(ctx context.Context, userID int64) (*entities.GetP
 }
 
 func (u *UserService) LoginWithGG(ctx context.Context, token string) *customerrors.CustomError {
-	userID := utils.GenUUID()
+	var userID int64
 
 	inforUser, err := utils.VerifyGoogleToken(token)
 	if err != nil {
@@ -150,18 +150,29 @@ func (u *UserService) LoginWithGG(ctx context.Context, token string) *customerro
 		return customerrors.ErrHashPassword
 	}
 
-	model := &domain.Users{
-		Id:           userID,
-		UserName:     inforUser.Name,
-		Password:     string(passwordHash),
-		GoogleUserId: inforUser.Sub,
-		Email:        inforUser.Email,
-		Avatar:       inforUser.Picture,
-		CreatedAt:    utils.GenTime(),
-		UpdatedAt:    utils.GenTime(),
-	}
-
 	if err := u.trans.Transaction(ctx, func(ctx context.Context, db *gorm.DB) error {
+		user, err := u.user.GetUserByGoogleUserID(ctx, inforUser.Sub)
+		if err != nil {
+			u.log.Error("Failed to fetch user", err)
+			return customerrors.ErrDB
+		}
+		if user == nil {
+			userID = utils.GenUUID()
+		} else {
+			userID = user.Id
+		}
+
+		model := &domain.Users{
+			Id:           userID,
+			UserName:     inforUser.Name,
+			Password:     string(passwordHash),
+			GoogleUserId: inforUser.Sub,
+			Email:        inforUser.Email,
+			Avatar:       inforUser.Picture,
+			CreatedAt:    utils.GenTime(),
+			UpdatedAt:    utils.GenTime(),
+		}
+
 		err = u.user.Create(ctx, db, model)
 		if err != nil {
 			u.log.Error("Failed to create user", err)
