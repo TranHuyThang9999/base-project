@@ -89,7 +89,7 @@ var (
 
 	ErrorSendEmail = NewError(
 		apperror.ErrorSendEmail,
-		http.StatusUnauthorized,
+		http.StatusInternalServerError,
 		apperror.ErrorSendEmailCode,
 		apperror.ErrorSendEmail.Error(),
 	)

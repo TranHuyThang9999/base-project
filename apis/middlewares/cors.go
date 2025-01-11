@@ -24,7 +24,7 @@ func (u *MiddlewareCors) CorsAPI() gin.HandlerFunc {
 		ctx.Request = ctx.Request.WithContext(timeoutCtx)
 
 		cors.New(cors.Options{
-			AllowedOrigins:   []string{"*"},
+			AllowedOrigins:   []string{"http://localhost:3000"},
 			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
 			AllowedHeaders:   []string{"Origin", "Content-Type", "Accept"},
 			ExposedHeaders:   []string{"Content-Length"},
