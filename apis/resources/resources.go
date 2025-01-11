@@ -18,28 +18,28 @@ func NewResource() *Resource {
 
 func (u *Resource) CreatedSuccess(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{
-		"code":    http.StatusCreated,
+		"code":    0,
 		"message": "created successfully",
 	})
 }
 
 func (u *Resource) DeletedSuccess(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
+		"code":    0,
 		"message": "deleted successfully",
 	})
 }
 
 func (u *Resource) UpdatedSuccess(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
+		"code":    0,
 		"message": "updated successfully",
 	})
 }
 
 func (u *Resource) ListAndCount(ctx *gin.Context, data interface{}, count int) {
 	ctx.JSON(http.StatusOK, gin.H{
-		"code":  http.StatusOK,
+		"code":  0,
 		"count": count,
 		"data":  data,
 	})
