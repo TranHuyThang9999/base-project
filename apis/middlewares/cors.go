@@ -25,7 +25,7 @@ func (u *MiddlewareCors) CorsAPI() gin.HandlerFunc {
 
 		cors.New(cors.Options{
 			AllowedOrigins:   []string{"http://localhost:3000"},
-			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 			AllowedHeaders:   []string{"Origin", "Content-Type", "Accept"},
 			ExposedHeaders:   []string{"Content-Length"},
 			AllowCredentials: true,
