@@ -1,5 +1,16 @@
 package main
 
+import (
+	"fmt"
+	"rices/common/utils"
+)
+
+func main() {
+	u := utils.NewUUID()
+
+	fmt.Println(u.GenPassWord())
+}
+
 // // Định nghĩa cấu trúc để nhận dữ liệu của các cert từ Google
 // type Certs struct {
 // 	Keys []struct {
