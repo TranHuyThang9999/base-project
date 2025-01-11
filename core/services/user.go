@@ -134,3 +134,8 @@ func (u *UserService) Profile(ctx context.Context, userID int64) (*entities.GetP
 		UpdatedAt:   user.UpdatedAt,
 	}, nil
 }
+
+func (u *UserService) LoginWithGG(ctx context.Context, token string) *customerrors.CustomError {
+
+	return nil
+}
