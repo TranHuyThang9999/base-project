@@ -54,7 +54,7 @@ func (u *Resource) Error(ctx *gin.Context, err *customerrors.CustomError) {
 
 func (u *Resource) Response(ctx *gin.Context, data interface{}) {
 	ctx.JSON(http.StatusOK, gin.H{
-		"code": http.StatusOK,
+		"code": 0,
 		"data": data,
 	})
 }

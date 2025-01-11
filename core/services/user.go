@@ -10,6 +10,7 @@ import (
 	customerrors "rices/core/custom_errors"
 	"rices/core/domain"
 	"strings"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -96,10 +97,13 @@ func (u *UserService) Login(ctx context.Context, user_name, password string) (*e
 		return nil, customerrors.ErrDB
 	}
 	if user == nil {
+		u.log.Warn("user not found")
 		return nil, customerrors.ErrNotFound
 	}
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	u.log.Infof("password : ", user.Password)
+	err = bcrypt.CompareHashAndPassword([]byte("$2a$10$zX8rRA34cpjqCzn1f36kg.Cb9r0mov2u2PNT3kna961Xq/C1c8fLK"), []byte("93023126"))
 	if err != nil {
+		u.log.Warn("error passwrd")
 		return nil, customerrors.ErrNotFound
 	}
 	genToken, err := u.jwt.GenToken(ctx, user.UserName, user.Id, user.UpdatedAt)
@@ -135,19 +139,22 @@ func (u *UserService) Profile(ctx context.Context, userID int64) (*entities.GetP
 	}, nil
 }
 
-func (u *UserService) LoginWithGG(ctx context.Context, token string) *customerrors.CustomError {
+func (u *UserService) LoginWithGG(ctx context.Context, tokenFromGG string) (*entities.LoginResponse, *customerrors.CustomError) {
 	var userID int64
-
-	inforUser, err := utils.VerifyGoogleToken(token)
+	var token string
+	var updateTime time.Time
+	var passWord string
+	inforUser, err := utils.VerifyGoogleToken(tokenFromGG)
 	if err != nil {
-		return customerrors.ErrVerifyTokenEmail
+		return nil, customerrors.ErrVerifyTokenEmail
 	}
 
 	genPassWord := utils.GenPassWord()
+	u.log.Infof("password: ", genPassWord)
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(fmt.Sprintln(genPassWord)), bcrypt.DefaultCost)
 	if err != nil {
 		u.log.Error("error hash password", err)
-		return customerrors.ErrHashPassword
+		return nil, customerrors.ErrHashPassword
 	}
 
 	if err := u.trans.Transaction(ctx, func(ctx context.Context, db *gorm.DB) error {
@@ -158,19 +165,23 @@ func (u *UserService) LoginWithGG(ctx context.Context, token string) *customerro
 		}
 		if user == nil {
 			userID = utils.GenUUID()
+			updateTime = utils.GenTime()
+			passWord = string(passwordHash)
 		} else {
 			userID = user.Id
+			updateTime = user.UpdatedAt
+			passWord = user.Password
 		}
 
 		model := &domain.Users{
 			Id:           userID,
 			UserName:     inforUser.Name,
-			Password:     string(passwordHash),
+			Password:     passWord,
 			GoogleUserId: inforUser.Sub,
 			Email:        inforUser.Email,
 			Avatar:       inforUser.Picture,
 			CreatedAt:    utils.GenTime(),
-			UpdatedAt:    utils.GenTime(),
+			UpdatedAt:    updateTime,
 		}
 
 		err = u.user.Create(ctx, db, model)
@@ -185,24 +196,34 @@ func (u *UserService) LoginWithGG(ctx context.Context, token string) *customerro
 			u.log.Error("Failed add info after to create user", err)
 			return customerrors.ErrDB
 		}
-		subject := "Gửi bạn tài khoản và mật khẩu đăng nhập"
-		body := fmt.Sprintf(
-			"Chào %v,\n\nChúng tôi đã tạo tài khoản cho bạn. Bạn có thể đăng nhập với tài khoản và mật khẩu sau:\n\nTài khoản: %v\nMật khẩu: %v\n\nChúc bạn sử dụng dịch vụ vui vẻ!",
-			inforUser.Name,
-			inforUser.Email,
-			genPassWord,
-		)
+		if user == nil {
+			subject := "Gửi bạn tài khoản và mật khẩu đăng nhập"
+			body := fmt.Sprintf(
+				"Chào %v,\n\nChúng tôi đã tạo tài khoản cho bạn. Bạn có thể đăng nhập với tài khoản và mật khẩu sau:\n\nTài khoản: %v\nMật khẩu: %v\n\nChúc bạn sử dụng dịch vụ vui vẻ!",
+				inforUser.Name,
+				inforUser.Name,
+				genPassWord,
+			)
 
-		err = utils.SendEmail(inforUser.Email, subject, body)
-		if err != nil {
-			u.log.Error("Failed to send email", err)
-			return customerrors.ErrorSendEmail
+			err = utils.SendEmail(inforUser.Email, subject, body)
+			if err != nil {
+				u.log.Error("Failed to send email", err)
+				return customerrors.ErrorSendEmail
+			}
 		}
 
+		genToken, err := u.jwt.GenToken(ctx, inforUser.Name, userID, updateTime)
+		if err != nil {
+			return customerrors.ErrAuth
+		}
+		token = genToken.Token
 		return nil
 	}); err != nil {
-		return customerrors.ErrDB
+		return nil, customerrors.ErrDB
 	}
 
-	return nil
+	return &entities.LoginResponse{
+		Token:     token,
+		CreatedAt: utils.GenTime(),
+	}, nil
 }

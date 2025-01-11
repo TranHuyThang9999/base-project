@@ -72,11 +72,11 @@ func (u *UserController) LoginWithGG(ctx *gin.Context) {
 	if !u.base.Bind(ctx, &req) {
 		return
 	}
-	err := u.user.LoginWithGG(ctx, req.Token)
+	token, err := u.user.LoginWithGG(ctx, req.Token)
 	if err != nil {
 		u.reso.Error(ctx, err)
 		return
 	}
 
-	u.reso.CreatedSuccess(ctx)
+	u.reso.Response(ctx, token)
 }
