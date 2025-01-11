@@ -24,3 +24,16 @@ type LoginResponse struct {
 	Token     string    `json:"token,omitempty"`
 	CreatedAt time.Time `json:"created_at,omitempty"`
 }
+
+type GoogleClaims struct {
+	Iss           string `json:"iss"`
+	Aud           string `json:"aud"`
+	Sub           string `json:"sub"` //gg ID
+	Email         string `json:"email"`
+	EmailVerified bool   `json:"email_verified"`
+	Name          string `json:"name"`
+	Picture       string `json:"picture"`
+	GivenName     string `json:"given_name"`
+	FamilyName    string `json:"family_name"`
+	jwt.RegisteredClaims
+}
