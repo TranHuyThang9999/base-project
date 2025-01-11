@@ -16,7 +16,9 @@ type Configs struct {
 	DatabaseRedisIndex int    `json:"database_redis_index"`
 	KeyAes             string `json:"key_aes"`
 	Email              string `json:"email"`
-	KeyEmail           string `json:"key_email"`
+	AppKey             string `json:"app_key"`
+	SmtpHost           string `json:"smtp_host"`
+	SmtpPort           string `json:"smtp_port"`
 }
 
 var config *Configs

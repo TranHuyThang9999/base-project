@@ -40,7 +40,7 @@ func NewUserService(user domain.RepositoryUser,
 
 func (u *UserService) Register(ctx context.Context, req *entities.CreateUserRequest) *customerrors.CustomError {
 	userNameTrSp := strings.TrimSpace(req.UserName)
-	userID := utils.NewUUID().GenUUID()
+	userID := utils.GenUUID()
 	user, err := u.user.FindByUsername(ctx, userNameTrSp)
 	if err != nil {
 		u.log.Error("database error during user lookup", err)
@@ -64,8 +64,8 @@ func (u *UserService) Register(ctx context.Context, req *entities.CreateUserRequ
 		Email:       req.Email,
 		PhoneNumber: req.PhoneNumber,
 		Avatar:      req.Avatar,
-		CreatedAt:   utils.NewUUID().GenTime(),
-		UpdatedAt:   utils.NewUUID().GenTime(),
+		CreatedAt:   utils.GenTime(),
+		UpdatedAt:   utils.GenTime(),
 	}
 
 	if err := u.trans.Transaction(ctx, func(ctx context.Context, db *gorm.DB) error {
@@ -109,7 +109,7 @@ func (u *UserService) Login(ctx context.Context, user_name, password string) (*e
 
 	return &entities.LoginResponse{
 		Token:     genToken.Token,
-		CreatedAt: utils.NewUUID().GenTime().UTC(),
+		CreatedAt: utils.GenTime().UTC(),
 	}, nil
 }
 
