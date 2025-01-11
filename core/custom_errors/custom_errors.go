@@ -79,4 +79,18 @@ var (
 		apperror.ErrorAuthCode,
 		apperror.ErrorAuthentication.Error(),
 	)
+
+	ErrVerifyTokenEmail = NewError(
+		apperror.ErrorVerifyTokenEmail,
+		http.StatusUnauthorized,
+		apperror.ErrorVerifyTokenEmailCode,
+		apperror.ErrorVerifyTokenEmail.Error(),
+	)
+
+	ErrorSendEmail = NewError(
+		apperror.ErrorSendEmail,
+		http.StatusUnauthorized,
+		apperror.ErrorSendEmailCode,
+		apperror.ErrorSendEmail.Error(),
+	)
 )

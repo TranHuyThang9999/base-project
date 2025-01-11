@@ -109,14 +109,19 @@ func GenerateConfigFile() {
     "smtp_port":"587"
 	}
 	`
+
 	if err := os.MkdirAll("configs", os.ModePerm); err != nil {
 		fmt.Println("Error creating directory:", err)
 		return
 	}
 
-	file, err := os.Create("configs/configs.json")
+	file, err := os.OpenFile("configs/configs.json", os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0644)
 	if err != nil {
-		fmt.Println("Error creating file:", err)
+		if os.IsExist(err) {
+			fmt.Println("File already exists, skipping creation.")
+		} else {
+			fmt.Println("Error opening file:", err)
+		}
 		return
 	}
 	defer file.Close()

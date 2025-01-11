@@ -136,6 +136,62 @@ func (u *UserService) Profile(ctx context.Context, userID int64) (*entities.GetP
 }
 
 func (u *UserService) LoginWithGG(ctx context.Context, token string) *customerrors.CustomError {
+	userID := utils.GenUUID()
+
+	inforUser, err := utils.VerifyGoogleToken(token)
+	if err != nil {
+		return customerrors.ErrVerifyTokenEmail
+	}
+
+	genPassWord := utils.GenPassWord()
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(fmt.Sprintln(genPassWord)), bcrypt.DefaultCost)
+	if err != nil {
+		u.log.Error("error hash password", err)
+		return customerrors.ErrHashPassword
+	}
+
+	model := &domain.Users{
+		Id:           userID,
+		UserName:     inforUser.Name,
+		Password:     string(passwordHash),
+		GoogleUserId: inforUser.Sub,
+		Email:        inforUser.Email,
+		Avatar:       inforUser.Picture,
+		CreatedAt:    utils.GenTime(),
+		UpdatedAt:    utils.GenTime(),
+	}
+
+	if err := u.trans.Transaction(ctx, func(ctx context.Context, db *gorm.DB) error {
+		err = u.user.Create(ctx, db, model)
+		if err != nil {
+			u.log.Error("Failed to create user", err)
+			return customerrors.ErrDB
+		}
+
+		key := fmt.Sprintf("user:%v", userID)
+		err = u.cache.Set(ctx, key, model, 0)
+		if err != nil {
+			u.log.Error("Failed add info after to create user", err)
+			return customerrors.ErrDB
+		}
+		subject := "Gửi bạn tài khoản và mật khẩu đăng nhập"
+		body := fmt.Sprintf(
+			"Chào %v,\n\nChúng tôi đã tạo tài khoản cho bạn. Bạn có thể đăng nhập với tài khoản và mật khẩu sau:\n\nTài khoản: %v\nMật khẩu: %v\n\nChúc bạn sử dụng dịch vụ vui vẻ!",
+			inforUser.Name,
+			inforUser.Email,
+			genPassWord,
+		)
+
+		err = utils.SendEmail(inforUser.Email, subject, body)
+		if err != nil {
+			u.log.Error("Failed to send email", err)
+			return customerrors.ErrorSendEmail
+		}
+
+		return nil
+	}); err != nil {
+		return customerrors.ErrDB
+	}
 
 	return nil
 }

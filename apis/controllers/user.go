@@ -66,3 +66,15 @@ func (u *UserController) Profile(ctx *gin.Context) {
 
 	u.reso.Response(ctx, user)
 }
+
+func (u *UserController) LoginWithGG(ctx *gin.Context) {
+	token := ctx.Param("token")
+
+	err := u.user.LoginWithGG(ctx, token)
+	if err != nil {
+		u.reso.Error(ctx, err)
+		return
+	}
+
+	u.reso.CreatedSuccess(ctx)
+}

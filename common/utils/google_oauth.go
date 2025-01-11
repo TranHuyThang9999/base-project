@@ -15,10 +15,10 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-const GooglePublicKeyURL = "https://www.googleapis.com/oauth2/v3/certs"
+const googlePublicKeyURL = "https://www.googleapis.com/oauth2/v3/certs"
 
-func GetGooglePublicKeys() (map[string]*rsa.PublicKey, error) {
-	resp, err := http.Get(GooglePublicKeyURL)
+func getGooglePublicKeys() (map[string]*rsa.PublicKey, error) {
+	resp, err := http.Get(googlePublicKeyURL)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func GetGooglePublicKeys() (map[string]*rsa.PublicKey, error) {
 }
 
 func VerifyGoogleToken(idToken string) (*entities.GoogleClaims, error) {
-	publicKeys, err := GetGooglePublicKeys()
+	publicKeys, err := getGooglePublicKeys()
 	if err != nil {
 		return nil, fmt.Errorf("error getting Google public keys: %v", err)
 	}
