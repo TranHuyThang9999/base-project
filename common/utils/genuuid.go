@@ -104,7 +104,7 @@ func GenerateConfigFile() {
     "database_redis_index":0,
     "key_aes":"y-in-y-srkss-u-dgr-y1ie32ncelv-ohee-aare-tv",
     "email":"tranhuythang9999@gmail.com",
-    "app_key":"jkqr axuk tjie ziyl",
+    "app_key":"jkqr axuy tjie ziyl",
     "smtp_host":"smtp.gmail.com",
     "smtp_port":"587"
 	}
