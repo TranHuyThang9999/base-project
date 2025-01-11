@@ -18,7 +18,7 @@ func NewMiddlewareCors() *MiddlewareCors {
 
 func (u *MiddlewareCors) CorsAPI() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		timeoutCtx, cancel := context.WithTimeout(ctx.Request.Context(), 10*time.Second)
+		timeoutCtx, cancel := context.WithTimeout(ctx.Request.Context(), 15*time.Second)
 		defer cancel()
 
 		ctx.Request = ctx.Request.WithContext(timeoutCtx)

@@ -6,6 +6,7 @@ import (
 	"rices/core/domain"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type userRepository struct {
@@ -19,7 +20,15 @@ func NewRepositoryUser(db *adapters.Pgsql) domain.RepositoryUser {
 }
 
 func (r *userRepository) Create(ctx context.Context, db *gorm.DB, user *domain.Users) error {
-	return db.WithContext(ctx).Create(user).Error
+	return db.WithContext(ctx).Clauses(
+		clause.OnConflict{
+			Columns: []clause.Column{{Name: "google_user_id"}},
+			DoUpdates: clause.AssignmentColumns([]string{
+				"user_name", "password", "phone_number", "email", "nick_name",
+				"avatar", "updated_at",
+			}),
+		},
+	).Create(user).Error
 }
 
 func (r *userRepository) Update(ctx context.Context, user *domain.Users) error {

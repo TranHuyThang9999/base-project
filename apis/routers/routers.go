@@ -35,7 +35,7 @@ func NewApiRouter(
 	{
 		userGroup.POST("/register", user.Register)
 		userGroup.POST("/login", user.Login)
-		userGroup.POST("/register/auth2/:token", user.LoginWithGG)
+		userGroup.POST("/register/auth2", user.LoginWithGG)
 		authorized := userGroup.Group("/")
 		authorized.Use(auth.Authorization())
 		{

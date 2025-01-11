@@ -12,7 +12,7 @@ type Users struct {
 	UserName     string         `json:"user_name,omitempty" gorm:"column:user_name;unique"`
 	Password     string         `json:"password,omitempty"`
 	PhoneNumber  string         `json:"phone_number,omitempty"`
-	GoogleUserId string         `json:"google_user_id,omitempty"`
+	GoogleUserId string         `json:"google_user_id,omitempty" gorm:"column:google_user_id;unique"`
 	Email        string         `json:"email,omitempty"`
 	NickName     string         `json:"nick_name,omitempty"`
 	Avatar       string         `json:"avatar,omitempty"`

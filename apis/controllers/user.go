@@ -68,9 +68,11 @@ func (u *UserController) Profile(ctx *gin.Context) {
 }
 
 func (u *UserController) LoginWithGG(ctx *gin.Context) {
-	token := ctx.Param("token")
-
-	err := u.user.LoginWithGG(ctx, token)
+	var req entities.LoginWithGGRequest
+	if !u.base.Bind(ctx, &req) {
+		return
+	}
+	err := u.user.LoginWithGG(ctx, req.Token)
 	if err != nil {
 		u.reso.Error(ctx, err)
 		return

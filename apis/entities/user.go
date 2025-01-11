@@ -12,9 +12,9 @@ type CreateUserRequest struct {
 	Avatar      string `json:"avatar,omitempty"`
 }
 
-type CreateUserRequestWithGG struct {
-	Id           int64  `json:"id,omitempty" gorm:"column:id;type:bigint;primaryKey;index"`
-	UserName     string `json:"user_name,omitempty" gorm:"column:user_name;unique"`
+type CreateUserWithGG struct {
+	Id           int64  `json:"id,omitempty"`
+	UserName     string `json:"user_name,omitempty"`
 	Password     string `json:"password,omitempty"`
 	PhoneNumber  string `json:"phone_number,omitempty"`
 	GoogleUserId string `json:"google_user_id,omitempty"`
@@ -31,4 +31,8 @@ type GetProfile struct {
 	PhoneNumber string    `json:"phone_number,omitempty"`
 	CreatedAt   time.Time `json:"created_at,omitempty"`
 	UpdatedAt   time.Time `json:"updated_at,omitempty"`
+}
+
+type LoginWithGGRequest struct {
+	Token string `json:"token,omitempty" binding:"required"`
 }
