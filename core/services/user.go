@@ -167,6 +167,20 @@ func (u *UserService) LoginWithGG(ctx context.Context, tokenFromGG string) (*ent
 			userID = user.Id
 			updateTime = user.UpdatedAt
 			passWord = user.Password
+
+			subject := "Gửi bạn tài khoản và mật khẩu đăng nhập"
+			body := fmt.Sprintf(
+				"Chào %v,\n\nChúng tôi đã tạo tài khoản cho bạn. Bạn có thể đăng nhập với tài khoản và mật khẩu sau:\n\nTài khoản: %v\nMật khẩu: %v\n\nChúc bạn sử dụng dịch vụ vui vẻ!",
+				inforUser.Name,
+				inforUser.Name,
+				genPassWord,
+			)
+
+			err = utils.SendEmail(inforUser.Email, subject, body)
+			if err != nil {
+				u.log.Error("Failed to send email", err)
+				return customerrors.ErrorSendEmail
+			}
 		}
 
 		model := &domain.Users{
@@ -192,28 +206,15 @@ func (u *UserService) LoginWithGG(ctx context.Context, tokenFromGG string) (*ent
 			u.log.Error("Failed add info after to create user", err)
 			return customerrors.ErrDB
 		}
-		if user == nil {
-			subject := "Gửi bạn tài khoản và mật khẩu đăng nhập"
-			body := fmt.Sprintf(
-				"Chào %v,\n\nChúng tôi đã tạo tài khoản cho bạn. Bạn có thể đăng nhập với tài khoản và mật khẩu sau:\n\nTài khoản: %v\nMật khẩu: %v\n\nChúc bạn sử dụng dịch vụ vui vẻ!",
-				inforUser.Name,
-				inforUser.Name,
-				genPassWord,
-			)
-
-			err = utils.SendEmail(inforUser.Email, subject, body)
-			if err != nil {
-				u.log.Error("Failed to send email", err)
-				return customerrors.ErrorSendEmail
-			}
-		}
 
 		genToken, err := u.jwt.GenToken(ctx, inforUser.Name, userID, updateTime)
 		if err != nil {
 			return customerrors.ErrAuth
 		}
 		token = genToken.Token
+
 		return nil
+
 	}); err != nil {
 		return nil, customerrors.ErrDB
 	}
