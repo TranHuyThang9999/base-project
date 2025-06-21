@@ -2,14 +2,14 @@ package main
 
 import (
 	"context"
+	"demo_time_sheet_server/apis/routers"
+	"demo_time_sheet_server/common/configs"
+	"demo_time_sheet_server/fxloader"
 	"flag"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
-	"rices/apis/routers"
-	"rices/common/configs"
-	"rices/fxloader"
 
 	"go.uber.org/fx"
 )

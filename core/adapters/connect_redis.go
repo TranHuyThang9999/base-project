@@ -2,8 +2,8 @@ package adapters
 
 import (
 	"context"
+	"demo_time_sheet_server/common/configs"
 	"log"
-	"rices/common/configs"
 	"time"
 
 	"github.com/redis/go-redis/v9"

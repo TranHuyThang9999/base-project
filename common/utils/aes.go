@@ -5,10 +5,10 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"demo_time_sheet_server/common/configs"
 	"encoding/base64"
 	"fmt"
 	"io"
-	"rices/common/configs"
 )
 
 func EncryptAes(plainText string) (string, error) {

@@ -2,10 +2,10 @@ package services
 
 import (
 	"context"
+	"demo_time_sheet_server/apis/entities"
+	"demo_time_sheet_server/common/configs"
+	customerrors "demo_time_sheet_server/core/custom_errors"
 	"fmt"
-	"rices/apis/entities"
-	"rices/common/configs"
-	customerrors "rices/core/custom_errors"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"

@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"rices/apis/entities"
-	"rices/apis/resources"
-	"rices/core/services"
+	"demo_time_sheet_server/apis/entities"
+	"demo_time_sheet_server/apis/resources"
+	"demo_time_sheet_server/core/services"
 
 	"github.com/gin-gonic/gin"
 )

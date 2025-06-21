@@ -1,14 +1,14 @@
 package fxloader
 
 import (
-	"rices/apis/controllers"
-	"rices/apis/middlewares"
-	"rices/apis/resources"
-	"rices/apis/routers"
-	"rices/common/logger"
-	"rices/core/adapters"
-	"rices/core/adapters/repository"
-	"rices/core/services"
+	"demo_time_sheet_server/apis/controllers"
+	"demo_time_sheet_server/apis/middlewares"
+	"demo_time_sheet_server/apis/resources"
+	"demo_time_sheet_server/apis/routers"
+	"demo_time_sheet_server/common/logger"
+	"demo_time_sheet_server/core/adapters"
+	"demo_time_sheet_server/core/adapters/repository"
+	"demo_time_sheet_server/core/services"
 
 	"go.uber.org/fx"
 )

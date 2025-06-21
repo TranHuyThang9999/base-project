@@ -2,8 +2,8 @@ package services
 
 import (
 	"context"
-	customerrors "rices/core/custom_errors"
-	"rices/core/domain"
+	customerrors "demo_time_sheet_server/core/custom_errors"
+	"demo_time_sheet_server/core/domain"
 )
 
 type FileDescriptorsService struct {

@@ -95,7 +95,7 @@ func ValidatePassword(password string) bool {
 func GenerateConfigFile() {
 	content := `
 	{
-    "data_source": "host=localhost user=postgres password=1234 dbname=rices port=5432 sslmode=disable TimeZone=Asia/Shanghai",
+    "data_source": "host=localhost user=postgres password=1234 dbname=demo_time_sheet_server port=5432 sslmode=disable TimeZone=Asia/Shanghai",
     "port": "8080",
     "access_secret": "secretAAAAAAaal;kjmnopiaassssdsv",
     "expire_access": "24h",

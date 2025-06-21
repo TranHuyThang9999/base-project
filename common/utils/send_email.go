@@ -1,9 +1,9 @@
 package utils
 
 import (
+	"demo_time_sheet_server/common/configs"
 	"fmt"
 	"net/smtp"
-	"rices/common/configs"
 	"strings"
 )
 

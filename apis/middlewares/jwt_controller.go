@@ -1,8 +1,8 @@
 package middlewares
 
 import (
+	"demo_time_sheet_server/core/services"
 	"net/http"
-	"rices/core/services"
 	"strings"
 	"time"
 

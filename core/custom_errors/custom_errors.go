@@ -1,9 +1,9 @@
 package customerrors
 
 import (
+	apperror "demo_time_sheet_server/core/app_error"
 	"fmt"
 	"net/http"
-	apperror "rices/core/app_error"
 )
 
 type CustomError struct {

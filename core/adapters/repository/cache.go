@@ -2,10 +2,10 @@ package repository
 
 import (
 	"context"
+	"demo_time_sheet_server/core/adapters"
+	"demo_time_sheet_server/core/adapters/cache"
 	"encoding/json"
 	"fmt"
-	"rices/core/adapters"
-	"rices/core/adapters/cache"
 	"time"
 
 	"github.com/redis/go-redis/v9"

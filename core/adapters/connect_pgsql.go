@@ -1,9 +1,9 @@
 package adapters
 
 import (
+	"demo_time_sheet_server/common/configs"
+	"demo_time_sheet_server/core/domain"
 	"fmt"
-	"rices/common/configs"
-	"rices/core/domain"
 	"time"
 
 	"gorm.io/driver/postgres"

@@ -1,8 +1,8 @@
 package resources
 
 import (
+	customerrors "demo_time_sheet_server/core/custom_errors"
 	"net/http"
-	customerrors "rices/core/custom_errors"
 
 	"github.com/gin-gonic/gin"
 )

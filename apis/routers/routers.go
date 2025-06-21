@@ -1,9 +1,9 @@
 package routers
 
 import (
-	"rices/apis/controllers"
-	"rices/apis/middlewares"
-	"rices/common/configs"
+	"demo_time_sheet_server/apis/controllers"
+	"demo_time_sheet_server/apis/middlewares"
+	"demo_time_sheet_server/common/configs"
 
 	"github.com/gin-gonic/gin"
 )

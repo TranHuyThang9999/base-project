@@ -2,8 +2,8 @@ package repository
 
 import (
 	"context"
-	"rices/core/adapters"
-	"rices/core/domain"
+	"demo_time_sheet_server/core/adapters"
+	"demo_time_sheet_server/core/domain"
 
 	"gorm.io/gorm"
 )

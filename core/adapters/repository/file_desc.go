@@ -2,9 +2,9 @@ package repository
 
 import (
 	"context"
+	"demo_time_sheet_server/core/adapters"
+	"demo_time_sheet_server/core/domain"
 	"errors"
-	"rices/core/adapters"
-	"rices/core/domain"
 
 	"gorm.io/gorm"
 )

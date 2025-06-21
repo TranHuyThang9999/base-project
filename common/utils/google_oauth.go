@@ -2,6 +2,7 @@ package utils
 
 import (
 	"crypto/rsa"
+	"demo_time_sheet_server/apis/entities"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -9,7 +10,6 @@ import (
 	"io"
 	"math/big"
 	"net/http"
-	"rices/apis/entities"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
