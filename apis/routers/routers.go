@@ -6,6 +6,7 @@ import (
 	"demo_time_sheet_server/common/configs"
 
 	"github.com/gin-gonic/gin"
+	ginprometheus "github.com/zsais/go-gin-prometheus"
 )
 
 type ApiRouter struct {
@@ -26,7 +27,13 @@ func NewApiRouter(
 	engine.Use(gin.Recovery())
 	engine.Use(cors.CorsAPI())
 
+	p := ginprometheus.NewPrometheus("gin")
+	p.ReqCntURLLabelMappingFn = func(c *gin.Context) string {
+		return c.FullPath()
+	}
+	p.Use(engine)
 	r := engine.RouterGroup.Group("/manager")
+
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
 	})

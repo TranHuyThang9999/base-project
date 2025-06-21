@@ -85,3 +85,6 @@ func main() {
 	// Success message
 	fmt.Println("Email sent successfully!")
 }
+
+```
+- Go to [prometheus local](http://localhost:8080/metrics).
