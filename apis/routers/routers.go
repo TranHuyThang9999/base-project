@@ -49,6 +49,7 @@ func NewApiRouter(
 			authorized.GET("/profile", user.Profile)
 		}
 	}
+
 	return &ApiRouter{
 		Engine: engine,
 	}
